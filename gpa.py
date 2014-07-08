@@ -17,7 +17,7 @@ def production(series, subject):
 		num = match[1].strip()
 		if len(num) == 0:
 			return (0, 0, False)
-		#print subject + ' -> ' + num
+		print subject + ' -> ' + num
 		score = float(match[1].strip())
 		#score = float(num)
 		credit = float(match[2].strip())
@@ -53,18 +53,19 @@ def main():
 
 	allScores = []
 	for series in range(1755, 1903):
-		ave = average(str(series))
-		stuID = '130312' + str(series+21)
-		print stuID + '\t-> %.2f'%ave
-		allScores.append((ave, stuID))
+		if (series+21) == 1902:
+			ave = average(str(series))
+			stuID = '130312' + str(series+21)
+			print stuID + '\t-> %.2f'%ave
+			allScores.append((ave, stuID))
 
-	f = open("rank.txt", "w")
-	rank = 1
-	allScores.sort()
-	for item in allScores:
-		print >> f, str(rank) + '\t' + item[1] + '\t-> %.2f'%item[0]
-		rank += 1
-	f.close()
+	#f = open("rank.txt", "w")
+	#rank = 1
+	#allScores.sort()
+	#for item in allScores:
+	#	print >> f, str(rank) + '\t' + item[1] + '\t-> %.2f'%item[0]
+	#	rank += 1
+	#f.close()
 
 if __name__ == '__main__':
 	main()
