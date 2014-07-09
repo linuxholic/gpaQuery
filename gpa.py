@@ -49,7 +49,17 @@ def main(argv):
 			apd=subjects[i][0:2] + '2' + subjects[i][3:]
 		subjects.append(apd)
 
+	if not argv:
+		print
+		print 'usage:'
+		print '\tpython gpa.py your_stuID'
+		print
+		sys.exit(1)
+
 	targetStu = argv[0]
+	if len(targetStu) != 10:
+		print 'Warning: bad ID'
+		sys.exit(1)
 	series = int(targetStu[6:])-21
 	ave = average(str(series))
 
