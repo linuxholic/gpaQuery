@@ -60,7 +60,7 @@ def main():
 
 	f = open("rank.txt", "w")
 	rank = 1
-	allScores.sort()
+	allScores.sort(reverse=True)
 	for item in allScores:
 		print >> f, str(rank) + '\t' + item[1] + '\t-> %.2f'%item[0]
 		rank += 1
