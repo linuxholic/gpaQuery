@@ -36,9 +36,15 @@ def average(series):
 	if credits:
 		ave = scores / credits
 	else:
-		return 0
+		ave = 0
 	print 'Your average score: %.2f'%ave
-	return ave
+
+def usage():
+	print
+	print 'usage:'
+	print '\tpython gpa.py your_stuID'
+	print
+	sys.exit(1)
 
 def main(argv):
 	length = len(subjects)
@@ -50,18 +56,14 @@ def main(argv):
 		subjects.append(apd)
 
 	if not argv:
-		print
-		print 'usage:'
-		print '\tpython gpa.py your_stuID'
-		print
-		sys.exit(1)
+		usage()
 
 	targetStu = argv[0]
 	if len(targetStu) != 10:
 		print 'Warning: bad ID'
 		sys.exit(1)
 	series = int(targetStu[6:])-21
-	ave = average(str(series))
+	average(str(series))
 
 if __name__ == '__main__':
 	main(sys.argv[1:])
