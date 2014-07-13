@@ -47,7 +47,29 @@ def production(series, subject):
 	else:
 		return (0, 0, False)
 
-def average(series):
+def getIDBySeries(series):
+	targtUrl = 'http://210.27.12.1:90/queryDegreeScoreAction.do?studentid=xdleess20130621zq%s&degreecourseno=0'%series
+	content = urllib2.urlopen(targtUrl).read()
+	test = re.search('<td width="20%">(.+?)</td>', content, re.S)
+	if test:
+		ID_with_chinese = test.group(1)
+		ID_without_chinese = ID_with_chinese.splitlines()[1]
+		ID_clean_numbers = ID_without_chinese.strip()
+		print 'try stuID -> ' + ID_clean_numbers
+		return ID_clean_numbers
+
+def getSeries(stuID):
+	series = int(stuID[6:])-21
+	ID_clean_numbers = getIDBySeries(series)
+	diff = int(stuID) - int(ID_clean_numbers)
+	while diff:
+		series += diff
+		ID_clean_numbers = getIDBySeries(series)
+		diff = int(stuID) - int(ID_clean_numbers)
+	return series
+
+def average(targetStu):
+	series = getSeries(targetStu)
 	scores = 0
 	credits = 0
 	print
@@ -87,8 +109,7 @@ def main(argv):
 	if len(targetStu) != 10:
 		print 'Warning: bad ID'
 		sys.exit(1)
-	series = int(targetStu[6:])-21
-	average(str(series))
+	average(targetStu)
 
 if __name__ == '__main__':
 	main(sys.argv[1:])
