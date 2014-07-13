@@ -1,5 +1,11 @@
+#!/usr/bin/python
+# -*- coding=utf-8 -*-
 import urllib2
 import re
+import codecs
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 subjects = ['0821101','0821102','0121019','0241001',
 			'0341001','0341002','0341003','0341022',
@@ -42,6 +48,16 @@ def average(series):
 	#print 'Your average score: %.2f'%ave
 	return ave
 
+def getName(series):
+	targtUrl = 'http://210.27.12.1:90/queryDegreeScoreAction.do?studentid=xdleess20130621zq%s&degreecourseno=0'%series
+	content = urllib2.urlopen(targtUrl).read()
+	match = re.search('<td width="15%">(.+?)</td>', content, re.S)
+	if match:
+		name_with_other_characters = match.group(1)
+		just_name = name_with_other_characters.splitlines()[1]
+		clean_name = just_name.strip()
+		return clean_name.decode('gbk')
+
 def main():
 	length = len(subjects)
 	for i in range(length):
@@ -54,15 +70,17 @@ def main():
 	allScores = []
 	for series in range(1755, 1903):
 		ave = average(str(series))
+		name = getName(str(series))
 		stuID = '130312' + str(series+21)
-		print stuID + '\t-> %.2f'%ave
-		allScores.append((ave, stuID))
+		print name + '\t' + stuID + '\t-> %.2f'%ave
+		allScores.append((ave, stuID, name))
 
 	f = open("rank.txt", "w")
 	rank = 1
 	allScores.sort(reverse=True)
 	for item in allScores:
-		print >> f, str(rank) + '\t' + item[1] + '\t-> %.2f'%item[0]
+		#print >> f, str(rank) + '\t' + item[2] + '\t' + item[1] + '\t-> %.2f'%item[0]
+		print >> f, '\t'.join([str(rank), item[2], item[1],'-> %.2f'%item[0]])
 		rank += 1
 	f.close()
 
