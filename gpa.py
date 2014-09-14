@@ -4,7 +4,12 @@ import urllib2
 import re
 import sys
 
+headers = {'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36',
+			'Host':'210.27.12.1:90',
+			'Referer':'http://210.27.12.1:90/student/main.jsp'}  
+
 subjects = [('0821101','中国特色'),
+			('0821004','专业英语阅读'),
 			('0821102','自然辩证法概论'),
 			('0121019','有限域及其应用'),
 			('0241001','矩阵论'),
@@ -34,7 +39,13 @@ subjects = [('0821101','中国特色'),
 
 def production(series, subject):
 	targtUrl = 'http://210.27.12.1:90/queryDegreeScoreAction.do?studentid=xdleess20130621zq%s&degreecourseno=%s'%(series,subject[0])
-	content = urllib2.urlopen(targtUrl).read()
+	#content = ''
+	#try:
+	req = urllib2.Request(targtUrl,headers=headers)
+	content = urllib2.urlopen(req).read()
+	#except urllib2.HTTPError(url,code,msg,hdrs,fp):
+	#except urllib2.HTTPError, e:
+		#content = e.fp
 	match = re.findall('<td width="7%" align="left">(.+?)</td>', content, re.S)
 	if match:
 		num = match[1].strip()
@@ -49,7 +60,14 @@ def production(series, subject):
 
 def getIDBySeries(series):
 	targtUrl = 'http://210.27.12.1:90/queryDegreeScoreAction.do?studentid=xdleess20130621zq%s&degreecourseno=0'%series
-	content = urllib2.urlopen(targtUrl).read()
+	#content = ''
+	#try:
+	req = urllib2.Request(targtUrl,headers=headers)
+	content = urllib2.urlopen(req).read()
+	#except urllib2.HTTPError(url,code,msg,hdrs,fp):
+	#except urllib2.HTTPError, e:
+		#content = e.fp
+		#print e.reason
 	test = re.search('<td width="20%">(.+?)</td>', content, re.S)
 	if test:
 		ID_with_chinese = test.group(1)
